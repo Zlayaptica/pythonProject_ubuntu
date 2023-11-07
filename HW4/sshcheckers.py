@@ -1,5 +1,6 @@
 import paramiko
 
+
 def ssh_checkout(host, user, passwd, cmd, text, port=22):
     client = paramiko.SSHClient()
     client.set_missing_host_key_policy(paramiko.AutoAddPolicy())
@@ -12,6 +13,7 @@ def ssh_checkout(host, user, passwd, cmd, text, port=22):
         return True
     else:
         return False
+
 
 # def ssh_getout(host, user, passwd, cmd, port=22):
 #     client = paramiko.SSHClient()
