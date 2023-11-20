@@ -8,10 +8,9 @@ with open('config.yaml') as f:
 class TestPositive:
     def test_step1(self, make_folder, clear_folder, make_files):
         result1 = ssh_checkout(data['host'], data['login'], data['passwd'],
-                               'cd {}; 7z a {}/arx2 -t{}'.format(data['folder_in'], data['folder_out'], data['type']),
-                               'Everything is Ok')
+                               'cd {}; 7z a {}/arx2 '.format(data['folder_in'], data['folder_out']), 'Everything is Ok')
         result2 = ssh_checkout(data['host'], data['login'], data['passwd'], 'cd {}; ls'.format(data['folder_out']),
-                               'arx2.{}'.format(data['type']))
+                               'arx2.7z')
         assert result1 and result2, 'test1 Fail'
 
     def test1_hash(self, clear_folder, make_files):
@@ -28,47 +27,43 @@ class TestPositive:
         assert all(res), 'test1_hash'
 
     def test_step2(self, clear_folder, make_files):
-        res = [ssh_checkout(data['host'], data['login'], data['passwd'],
-                            'cd {}; 7z a {}/arx2 -t{}'.format(data['folder_in'], data['folder_out'], data['type']),
-                            'Everything is Ok'), ssh_checkout(data['host'], data['login'], data['passwd'],
-                                                              'cd {}; 7z e arx2.{} -o{} -y'.format(data['folder_out'],
-                                                                                                   data['type'],
-                                                                                                   data['folder_ext']),
-                                                              'Everything is Ok')]
+        res = []
+        res.append(ssh_checkout(data['host'], data['login'], data['passwd'],
+                                'cd {}; 7z a {}/arx2.7z'.format(data['folder_in'], data['folder_out']),
+                                'Everything is Ok'))
+        res.append(ssh_checkout(data['host'], data['login'], data['passwd'],
+                                'cd {}; 7z e arx2.7z -o{} -y'.format(data['folder_out'], data['folder_ext']),
+                                'Everything is Ok'))
         for i in make_files:
             res.append(ssh_checkout(data['host'], data['login'], data['passwd'], 'ls {}'.format(data['folder_ext']), i))
         assert all(res), 'test2 Fail'
 
     def test_step3(self):
         assert ssh_checkout(data['host'], data['login'], data['passwd'],
-                            'cd {}; 7z t arx2.{}'.format(data['folder_out'], data['type']),
-                            'Everything is Ok'), 'test3 Fail'
+                            'cd {}; 7z t arx2.7z'.format(data['folder_out']), 'Everything is Ok'), 'test3 Fail'
 
     def test_step4(self):
         assert ssh_checkout(data['host'], data['login'], data['passwd'],
-                            'cd {}; 7z u {}/arx2.{}'.format(data['folder_in'], data['folder_out'], data['type']),
+                            'cd {}; 7z u {}arx2.7z'.format(data['folder_in'], data['folder_out']),
                             'Everything is Ok'), 'test4 Fail'
 
     def test_step5(self, clear_folder, make_files):
         res = []
         res.append(ssh_checkout(data['host'], data['login'], data['passwd'],
-                                'cd {}; 7z a {}/arx2 -t{}'.format(data['folder_in'], data['folder_out'], data['type']),
+                                'cd {}; 7z a {}/arx2.7z'.format(data['folder_in'], data['folder_out']),
                                 'Everything is Ok'))
         for i in make_files:
-            res.append(
-                ssh_checkout(data['host'], data['login'], data['passwd'],
-                             'cd {}; 7z l arx2.{}'.format(data['folder_out'], data['type']),
-                             i))
+            res.append(ssh_checkout(data['host'], data['login'], data['passwd'],
+                                    'cd {}; 7z l arx2.7z'.format(data['folder_out']), i))
         assert all(res), 'test5 FAIL'
 
     def test_step6(self, clear_folder, make_files, make_subfolder):
         res = []
         res.append(ssh_checkout(data['host'], data['login'], data['passwd'],
-                                'cd {}; 7z a {}/arx2 -t{}'.format(data['folder_in'], data['folder_out'], data['type']),
+                                'cd {}; 7z a {}/arx2.7z'.format(data['folder_in'], data['folder_out']),
                                 'Everything is Ok'))
         res.append(ssh_checkout(data['host'], data['login'], data['passwd'],
-                                'cd {}; 7z x arx2.{} -o{} -y'.format(data['folder_out'], data['type'],
-                                                                     data['folder_ext2']),
+                                'cd {}; 7z x arx2.7z -o{} -y'.format(data['folder_out'], data['folder_ext2']),
                                 'Everything is Ok'))
         for i in make_files:
             res.append(
@@ -82,5 +77,4 @@ class TestPositive:
 
     def test_step7(self):
         assert ssh_checkout(data['host'], data['login'], data['passwd'],
-                            'cd {}; 7z d arx2.{}'.format(data['folder_out'], data['type']),
-                            'Everything is Ok'), 'test7 Fail'
+                            'cd {}; 7z d arx2.7z'.format(data['folder_out']), 'Everything is Ok'), 'test7 Fail'

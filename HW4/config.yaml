@@ -1,7 +1,10 @@
-folder_in: '/home/user/Test7z/tst'
-folder_out: '/home/user/Test7z/out'
-folder_ext: '/home/user/Test7z/folder1'
-folder_ext2: '/home/user/Test7z/folder2'
-type: zip
-bs:2M
+folder_in: /home/user2/tst
+folder_out: /home/user2/out
+folder_ext: /home/user2/folder1
+folder_ext2: /home/user2/folder2
+host: '0.0.0.0'
+login: 'user2'
+passwd: '2222'
 count: 5
+bs: 2M
+arx_type: 7z

@@ -26,7 +26,7 @@ def ssh_get(host, user, passwd, cmd, port=22):
     return out
 
 
-def ssh_checkout_neg(host, user, passwd, cmd, text, port=22):
+def ssh_checkout_negative(host, user, passwd, cmd, text, port=22):
     client = paramiko.SSHClient()
     client.set_missing_host_key_policy(paramiko.AutoAddPolicy())
     client.connect(hostname=host, username=user, password=passwd, port=port)
@@ -40,5 +40,22 @@ def ssh_checkout_neg(host, user, passwd, cmd, text, port=22):
         return False
 
 
-def hash_func(cmd):
-    return subprocess.run(cmd, shell=True, stdout=subprocess.PIPE, encoding='utf-8').stdout
+def checkout(cmd, text):
+    result = subprocess.run(cmd, shell=True, stdout=subprocess.PIPE, encoding='utf-8')
+    print(result.stdout)
+    if text in result.stdout and result.returncode == 0:
+        return True
+    else:
+        return False
+
+
+def checkout_negative(cmd, text):
+    result = subprocess.run(cmd, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE, encoding='utf-8')
+    if (text in result.stdout or text in result.stderr) and result.returncode != 0:
+        return True
+    else:
+        return False
+
+
+def getout(cmd):
+    return subprocess.run(cmd, shell=True, stdout=sub
